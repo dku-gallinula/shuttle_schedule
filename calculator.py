@@ -14,9 +14,9 @@ weekday_define = schedule['weekday_define']
 weekend_define = schedule['weekend_define']
 
 if len(sys.argv) > 1:
-    if sys.argv[1].lower() == "dku":
+    if sys.argv[1].lower() in ["dku", "d"]:
         location = "DKU"
-    elif sys.argv[1].lower() == "ta":
+    elif sys.argv[1].lower() in ["ta", "t"]:
         location = "TA"
     else:
         location = "DKU"
