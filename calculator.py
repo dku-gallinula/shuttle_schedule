@@ -23,6 +23,9 @@ if len(sys.argv) > 1:
 else:
     location = "DKU"
 
+# location = "DKU"
+# now = datetime(2021, 12, 21, 20, 30, 00)
+
 # Weekday Schedule
 if now.weekday()+1 in weekday_define:
 # if test_var in weekday_define:
@@ -47,5 +50,10 @@ else:
 future_shuttles = [i[0] for i in schedule[plan] if datetime.strptime(i[0], "%H:%M").time() > now.time()]
 future_shuttles_2 = future_shuttles[:2]
 
-result = location + ";" + future_shuttles_2[0] + ";" + future_shuttles_2[1]
+if len(future_shuttles_2) > 1:
+    result = location + ";" + future_shuttles_2[0] + ";" + future_shuttles_2[1]
+elif len(future_shuttles_2) > 0:
+    result = location + ";" + future_shuttles_2[0]
+else:
+    result = "None"
 print(result)
