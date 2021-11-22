@@ -1,0 +1,74 @@
+<html>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <head>
+        <title>Shuttle Schedule</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            function getParam(name) {
+                if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+                    return decodeURIComponent(name[1]);
+            }
+            var loc = getParam("loc");
+            var request = new XMLHttpRequest();
+            request.open('GET', 'shuttle_schedule.json', false);
+            request.send(null);
+            var schedule = JSON.parse(request.responseText);
+            var now = new Date(Date.now());
+            var weekday_define = schedule['weekday_define'];
+            var weekend_define = schedule['weekend_define'];
+            
+            var weekday = now.getDay();
+            var plan;
+            if (now.getDay() + 1 in weekday_define) {
+                if (loc == "ta") {
+                    plan = "weekday_A";
+                }
+                else if (loc == "dku") {
+                    plan = "weekday_B"
+                }
+                else {
+                    plan = "weekday_B"
+                }
+            }
+            else if (now.getDay() + 1 in weekend_define) {
+                if (loc == "ta") {
+                    plan = "weekend_A";
+                }
+                else if (loc == "dku") {
+                    plan = "weekend_B"
+                }
+                else {
+                    plan = "weekend_B"
+                }
+            }
+            var future_shuttles = [];
+            for (var index in schedule[plan]) {
+                var splits = schedule[plan][index][0].split(':');
+                var dateTime = new Date(2000, 0, 1, splits[0], splits[1]);
+                var nowTime = new Date(2000, 0, 1, now.getHours(), now.getMinutes());
+                if (dateTime > nowTime) {
+                    future_shuttles.push(schedule[plan][index][0]);
+                }
+            }
+            var result;
+            console.log(future_shuttles);
+            if (future_shuttles.length > 1) {
+                var nearest_shuttle_arr = future_shuttles[0].split(':');
+                var nearest_shuttle_time = new Date(2000, 0, 1, nearest_shuttle_arr[0], nearest_shuttle_arr[1]);
+                nearest_shuttle_time.setMinutes(nearest_shuttle_time.getMinutes() - 10)
+                result = "2;" + loc + ";" + future_shuttles[0] + ";" + future_shuttles[1] + ";" + nearest_shuttle_time.getHours() + ":" + (nearest_shuttle_time.getMinutes() < 10 ? "0" : "") + nearest_shuttle_time.getMinutes();
+            }
+            else if (future_shuttles.length > 0) {
+                var nearest_shuttle_arr = future_shuttles[0].split(':');
+                var nearest_shuttle_time = new Date(2000, 0, 1, nearest_shuttle_arr[0], nearest_shuttle_arr[1]);
+                nearest_shuttle_time.setMinutes(nearest_shuttle_time.getMinutes() - 10)
+                result = "1;" + loc + ";" + future_shuttles[0] + ";;" + nearest_shuttle_time.getHours() + ":" + (nearest_shuttle_time.getMinutes() < 10 ? "0" : "") + nearest_shuttle_time.getMinutes();
+            }
+            else {
+                result = "0" + ";" + loc + ";;;";
+            }
+            document.write(result);
+        </script>
+    </body>
+</html>
