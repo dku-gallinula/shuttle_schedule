@@ -1,5 +1,8 @@
 <html>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Cache-Control" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <head>
         <title>Shuttle Schedule</title>
     </head>
@@ -17,10 +20,15 @@
             var now = new Date(Date.now());
             var weekday_define = schedule['weekday_define'];
             var weekend_define = schedule['weekend_define'];
-            
             var weekday = now.getDay();
+            // console.log(weekday);
             var plan;
-            if (now.getDay() + 1 in weekday_define) {
+            // console.log(loc);
+            // console.log(weekday_define)
+            // console.log(weekend_define)
+            if (weekday_define.includes(weekday)) {
+            // if (weekday in weekday_define) {
+                console.log("in weekday")
                 if (loc == "ta") {
                     plan = "weekday_A";
                 }
@@ -31,7 +39,9 @@
                     plan = "weekday_B"
                 }
             }
-            else if (now.getDay() + 1 in weekend_define) {
+            else if (weekend_define.includes(weekday)) {
+            // else if (weekday in weekend_define) {
+                console.log("in weekend")
                 if (loc == "ta") {
                     plan = "weekend_A";
                 }
@@ -42,8 +52,13 @@
                     plan = "weekend_B"
                 }
             }
+            else {
+                console.log("in else")
+            }
+            console.log(plan);
             var future_shuttles = [];
             for (var index in schedule[plan]) {
+                // console.log(index);
                 var splits = schedule[plan][index][0].split(':');
                 var dateTime = new Date(2000, 0, 1, splits[0], splits[1]);
                 var nowTime = new Date(2000, 0, 1, now.getHours(), now.getMinutes());
@@ -52,7 +67,7 @@
                 }
             }
             var result;
-            console.log(future_shuttles);
+            // console.log(future_shuttles);
             if (future_shuttles.length > 1) {
                 var nearest_shuttle_arr = future_shuttles[0].split(':');
                 var nearest_shuttle_time = new Date(2000, 0, 1, nearest_shuttle_arr[0], nearest_shuttle_arr[1]);
