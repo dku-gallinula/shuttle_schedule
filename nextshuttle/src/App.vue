@@ -105,7 +105,7 @@ export default {
   data: function () {
     return {
       shuttle_data: shuttle_data,
-      current_weekday: 1,
+      current_weekday: 0,
       currentTimestamp: Math.round(new Date().getTime() / 1000),
       from_place: "TA",
       to_place: "DKU",
@@ -143,6 +143,7 @@ export default {
 
     getCurrentWeekday() {
       this.current_weekday = new Date().getDay();
+      // console.log(new Date().getDay())
     },
 
     refreshTime() {
@@ -172,7 +173,10 @@ export default {
 
     getNearestBus() {
       let timeList = [];
-      if (this.current_weekday in shuttle_data["weekday_define"]) {
+      // if (this.current_weekday in shuttle_data["weekday_define"]) {
+      if (shuttle_data["weekday_define"].includes(this.current_weekday)) {
+        console.log("it's weekday", this.current_weekday);
+        console.log(shuttle_data["weekday_define"])
         // weekday
         if (this.from_place == shuttle_data["weekday_stops_A"][0]) {
           this.shuttle_data["weekday_A"].forEach(function (item) {
@@ -240,7 +244,8 @@ export default {
       // console.log("from_place", this.from_place)
       // console.log("to_place", this.to_place)
 
-      if (this.current_weekday in shuttle_data["weekday_define"]) {
+      // if (this.current_weekday in shuttle_data["weekday_define"]) {
+      if (shuttle_data["weekday_define"].includes(this.current_weekday)) {
         // weekday
         if (this.from_place == shuttle_data["weekday_stops_A"][1]) {
           this.show_weekday_A = "table";
